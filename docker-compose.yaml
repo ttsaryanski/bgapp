@@ -1,6 +1,6 @@
 services:
     web:
-        image: localhost:5000/bgapp_web:1.0
+        image: ${MANAGER_IP}:${LOCAL_REGISTRY_PORT}/bgapp_web:1.0
         ports:
             - 8080:80
         volumes:
