@@ -3,8 +3,8 @@ services:
         image: bgapp_web:1.0
         ports:
             - 8080:80
-        # volumes:
-        #     - "/home/vagrant/bgapp/web:/var/www/html:ro"
+        volumes:
+            - "/home/vagrant/bgapp/web:/var/www/html:ro"
         networks:
             - app-network
         depends_on:
