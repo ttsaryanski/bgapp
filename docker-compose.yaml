@@ -4,7 +4,7 @@ services:
         ports:
             - 8080:80
         volumes:
-            - "/home/vagrant/bgapp/web:/var/www/html:ro"
+            - appdata:/var/www/html:ro"
         networks:
             - app-network
         depends_on:
@@ -17,3 +17,6 @@ services:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
 networks:
     app-network:
+
+volumes:
+    appdata:
