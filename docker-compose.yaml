@@ -10,7 +10,7 @@ services:
         depends_on:
             - db
     db:
-        image: bgapp_db:1.0
+        image: ${MANAGER_IP}:${LOCAL_REGISTRY_PORT}/bgapp_db:1.0
         networks:
             - app-network
         environment:
