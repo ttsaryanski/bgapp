@@ -1,8 +1,6 @@
 services:
     web:
-        build:
-            context: .
-            dockerfile: Dockerfile.web
+        image: bgapp_web:1.0
         ports:
             - 8080:80
         volumes:
@@ -12,9 +10,7 @@ services:
         depends_on:
             - db
     db:
-        build:
-            context: .
-            dockerfile: Dockerfile.db
+        image: bgapp_db:1.0
         networks:
             - app-network
         environment:
