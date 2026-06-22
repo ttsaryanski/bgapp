@@ -1,0 +1,71 @@
+Vagrant.configure("2") do |config|
+
+  NODES = [
+    { name: "manager1", ip: "192.168.99.100", role: "manager" },
+    { name: "worker1",  ip: "192.168.99.101", role: "worker"  },
+    { name: "worker2",  ip: "192.168.99.102", role: "worker"  }
+  ]
+  
+  BOX = "almalinux9.6-docker"
+  SWARM_TOKEN_FILE = "/vagrant/swarm_token"
+  MANAGER_IP = NODES.find { |n| n[:role] == "manager" }[:ip]
+  LOCAL_REGISTRY_PORT = 5000
+
+  # Run deploy only after all machines are up and provisioned.
+  config.trigger.after :up do |trigger|
+    trigger.only_on = "worker2"
+    trigger.info = "All nodes are up. Running deploy provisioner on manager1..."
+    trigger.run = {
+      inline: "vagrant provision manager1 --provision-with deploy_services"
+    }
+  end
+
+  NODES.each do |node|
+    config.vm.define node[:name] do |swarm|
+      swarm.vm.box = BOX
+      swarm.vm.hostname = node[:name]
+      swarm.vm.network "private_network", ip: node[:ip]
+      
+      swarm.vm.provider "virtualbox" do |vb|
+        vb.memory = node[:role] == "manager" ? 2048 : 1024
+        vb.cpus = 2
+      end
+      
+      # Common setup on all nodes: ensure Docker is running and swarm ports are open.
+      swarm.vm.provision "shell", path: "open-firewall-ports.sh"
+      
+      # ---- SWARM INIT (ONLY manager1) ----
+      if node[:role] == "manager"
+        swarm.vm.network "forwarded_port", guest: 8080, host: 8080, auto_correct: true
+        swarm.vm.provision "shell", inline: <<-SHELL
+          docker swarm init --advertise-addr #{node[:ip]}
+          
+          docker swarm join-token -q worker > #{SWARM_TOKEN_FILE}
+        SHELL
+        swarm.vm.provision "shell", path: "docker-config.sh", args: [MANAGER_IP, LOCAL_REGISTRY_PORT]
+      end
+
+      # ---- WORKER JOIN ----
+      if node[:role] == "worker"
+        swarm.vm.provision "shell", inline: <<-SHELL
+          TOKEN="$(cat #{SWARM_TOKEN_FILE})"
+
+          docker swarm join --token "$TOKEN" #{MANAGER_IP}:2377
+        SHELL
+        swarm.vm.provision "shell", path: "docker-config.sh", args: [MANAGER_IP, LOCAL_REGISTRY_PORT]
+      end
+
+      # ---- DEPLOY SERVICES (ONLY manager1) ----
+      if node[:role] == "manager"
+        swarm.vm.provision "shell",
+          name: "deploy_services",
+          run: "never",
+          path: "deploy-services.sh",
+          args: [MANAGER_IP, LOCAL_REGISTRY_PORT]
+      end
+
+    end
+
+  end
+
+end
