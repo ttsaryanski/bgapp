@@ -1,0 +1,91 @@
+# Vagrant
+.vagrant/
+*.box
+vagrant_ansible_inventory_*
+.vagrant.d/
+
+# VirtualBox
+.vbox
+*.vbox-prev
+VirtualBox VMs/
+*.ova
+
+# Docker
+docker-compose.override.yml
+.dockerignore
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE and Editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+.DS_Store
+*.iml
+
+# OS Files
+.DS_Store
+Thumbs.db
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+docker-compose.log
+
+# Dependencies
+node_modules/
+vendor/
+composer.lock
+
+# Database
+*.sql.bak
+*.sql.backup
+db/backups/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+*.backup
+
+# Secrets and Tokens
+swarm_token
+*.key
+*.pem
+*.pub
+.ssh/
+
+# Build artifacts
+dist/
+build/
+out/
+
+# Cache
+.cache/
+*.cache
+
+# PHP-specific
+.php_cs.cache
+
+# Project-specific
+web/cache/
+web/uploads/
+web/sessions/
+
+# Git
+.git/

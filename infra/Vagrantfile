@@ -6,7 +6,7 @@ Vagrant.configure("2") do |config|
     { name: "worker2",  ip: "192.168.99.102", role: "worker"  }
   ]
   
-  BOX = "almalinux9.6-docker"
+  BOX = "ttsaryanski/almalinux9.6-docker"
   SWARM_TOKEN_FILE = "/vagrant/swarm_token"
   MANAGER_IP = NODES.find { |n| n[:role] == "manager" }[:ip]
   LOCAL_REGISTRY_PORT = 5000
@@ -23,6 +23,7 @@ Vagrant.configure("2") do |config|
   NODES.each do |node|
     config.vm.define node[:name] do |swarm|
       swarm.vm.box = BOX
+      swarm.vm.box_version = "0.1"
       swarm.vm.hostname = node[:name]
       swarm.vm.network "private_network", ip: node[:ip]
       
