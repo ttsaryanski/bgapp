@@ -1,8 +1,6 @@
 services:
     web:
         image: bgapp_web:1.0
-        deploy:
-            replicas: 3
         ports:
             - 8080:80
         volumes:
