@@ -29,7 +29,6 @@ The goal of this project is to automatically build and deploy a complete **Docke
 │   ├── deploy-services.sh   # Script for deploying services to Swarm cluster
 │   ├── docker-config.sh     # Docker Swarm initialization and configuration
 │   ├── open-firewall-ports.sh # Opening firewall ports
-│   ├── swarm_token          # Docker Swarm join token for multi-node cluster
 │   └── Vagrantfile          # Vagrant configuration for VM
 └── web/                     # Web application
     ├── config.php           # Configuration file
@@ -63,7 +62,6 @@ The goal of this project is to automatically build and deploy a complete **Docke
 - `docker-config.sh` - Initializes Docker Swarm mode and configures cluster settings
 - `deploy-services.sh` - Deploys and manages services in the Swarm cluster with scaling
 - `open-firewall-ports.sh` - Opens required ports for Swarm communication
-- `swarm_token` - Token for joining additional nodes to the cluster (for multi-node setup)
 
 ---
 
@@ -165,7 +163,6 @@ docker service update --env-add KEY=value bgapp_web
 - View cluster status: `docker node inspect <node-id>`
 - Services automatically restart on failure (configurable via compose file)
 - Load balancing is automatic for all replicated services
-- To extend to multi-node cluster, use the `swarm_token` file to join additional nodes
 
 ---
 
